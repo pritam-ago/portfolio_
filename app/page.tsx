@@ -303,12 +303,16 @@ export default function Portfolio() {
               </span>
             </div>
             <div className="flex flex-col sm:flex-row gap-4 justify-center animate-fade-in-delay-3">
-              <Button className="bg-[#238636] hover:bg-[#2ea043] text-[#e6edf3] border border-[#238636]">
-                View Projects
-              </Button>
-              <Button variant="outline" className="border-[#58a6ff] text-[#58a6ff] hover:bg-[#1f2937]">
-                Contact Me
-              </Button>
+              <Link href="#projects">
+                <Button className="bg-[#238636] hover:bg-[#2ea043] text-[#e6edf3] border border-[#238636]">
+                  View Projects
+                </Button>
+              </Link>
+              <Link href="#contact">
+                <Button variant="outline" className="border-[#58a6ff] text-[#58a6ff] hover:bg-[#1f2937]">
+                  Contact Me
+                </Button>
+              </Link>
             </div>
           </div>
         </div>
