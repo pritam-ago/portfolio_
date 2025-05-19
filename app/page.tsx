@@ -2,15 +2,201 @@
 
 import { useEffect, useState, useRef } from "react"
 import Link from "next/link"
-import { Github, Linkedin, Mail, Twitter, Terminal, Code, Database, Server } from "lucide-react"
+import { Github, Linkedin, Mail, Twitter, Terminal, Code, Database, Server, Instagram } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import TerminalComponent from "@/components/terminal"
+import type { JSX } from "react"
+
+interface Project {
+  title: string;
+  description: string;
+  technologies: string[];
+  image: string;
+  liveLink?: string;
+  githubLink: string;
+}
+
+interface SkillCategory {
+  title: string;
+  icon: JSX.Element;
+  skills: string[];
+}
+
+interface ProjectCardProps {
+  project: Project;
+}
+
+interface SkillCardProps {
+  category: SkillCategory;
+}
+
+// Project Card Component
+function ProjectCard({ project }: ProjectCardProps) {
+  const [isExpanded, setIsExpanded] = useState(false)
+
+  return (
+    <div className="transform transition-transform hover:-translate-y-1">
+      <Card className="overflow-hidden border-[#30363d] bg-[#0d1117] h-full">
+        <div className="aspect-video w-full overflow-hidden bg-[#161b22] relative group">
+          <img
+            src={project.image}
+            alt={project.title}
+            className="h-full w-full object-cover transition-all duration-300 group-hover:scale-105 opacity-90 group-hover:opacity-100"
+            loading="lazy"
+          />
+          <div className="absolute inset-0 bg-gradient-to-t from-[#0d1117] via-transparent to-transparent opacity-70 group-hover:opacity-50 transition-opacity duration-300"></div>
+          <div className="absolute inset-0 bg-[#0d1117] opacity-0 group-hover:opacity-20 transition-opacity duration-300"></div>
+        </div>
+        <CardContent className="p-6 relative">
+          <h3 className="text-xl font-bold mb-2 text-[#58a6ff]">{project.title}</h3>
+          <p className="text-sm mb-4 text-[#8b949e]">{project.description}</p>
+          <div className="flex flex-wrap gap-2 mb-4">
+            {project.technologies.map((tech, index) => (
+              <Badge key={index} className="bg-[#1f2937] text-[#7ee787] hover:bg-[#2d3748]">
+                {tech}
+              </Badge>
+            ))}
+          </div>
+          <div className="flex justify-between">
+            <Button
+              variant="outline"
+              size="sm"
+              className="border-[#58a6ff] text-[#58a6ff] hover:bg-[#1f2937]"
+              onClick={() => setIsExpanded(!isExpanded)}
+            >
+              {isExpanded ? "Less Details" : "More Details"}
+            </Button>
+            {project.liveLink && (
+              <Link href={project.liveLink} target="_blank" rel="noopener noreferrer">
+                <Button variant="outline" size="sm" className="border-[#238636] text-[#7ee787] hover:bg-[#1f2937]">
+                  Live Demo
+                </Button>
+              </Link>
+            )}
+          </div>
+
+          {isExpanded && (
+            <div className="mt-4 pt-4 border-t border-[#30363d] animate-expand">
+              <h4 className="text-md font-bold mb-2 text-[#e6edf3]">Project Details</h4>
+              <p className="text-sm mb-3 text-[#8b949e]">
+                This project was built with a focus on scalability and performance. It features robust error
+                handling, comprehensive testing, and was designed with modern best practices in mind.
+              </p>
+              <h4 className="text-md font-bold mb-2 text-[#e6edf3]">Key Features</h4>
+              <ul className="list-disc pl-5 text-sm text-[#8b949e] mb-3">
+                <li>High-performance architecture</li>
+                <li>Comprehensive security measures</li>
+                <li>Extensive documentation</li>
+                <li>Scalable infrastructure</li>
+              </ul>
+              <div className="flex justify-end">
+                <Link href={project.githubLink} target="_blank" rel="noopener noreferrer">
+                  <Button size="sm" className="bg-[#238636] hover:bg-[#2ea043] text-[#e6edf3]">
+                    View Repository
+                  </Button>
+                </Link>
+              </div>
+            </div>
+          )}
+        </CardContent>
+      </Card>
+    </div>
+  )
+}
+
+// Skill Card Component
+function SkillCard({ category }: SkillCardProps) {
+  return (
+    <Card className="bg-[#0d1117] border-[#30363d] h-full overflow-hidden hover:border-[#58a6ff] transition-colors">
+      <CardContent className="p-6 relative">
+        <div className="flex items-center mb-4">
+          {category.icon}
+          <h3 className="text-xl font-bold ml-2 text-[#58a6ff] border-b border-[#30363d] pb-2 flex-grow">
+            {category.title}
+          </h3>
+        </div>
+        <div className="flex flex-wrap gap-2">
+          {category.skills.map((skill, index) => (
+            <Badge
+              key={index}
+              className="bg-[#1f2937] text-[#7ee787] hover:bg-[#2d3748] cursor-pointer transform transition-transform hover:scale-105"
+            >
+              {skill}
+            </Badge>
+          ))}
+        </div>
+      </CardContent>
+    </Card>
+  )
+}
+
+// Project data
+const projects: Project[] = [
+  {
+    title: "Online File Management System",
+    description: "A full stack web app for file uploads and folder management with secure, user-based access and S3 storage. Features include file upload, download, sharing, and real-time updates.",
+    technologies: ["Node.js", "Express.js", "MongoDB", "AWS S3", "Nextjs"],
+    image: "/filesystem.png",
+    liveLink: "https://filesystem.up.railway.app",
+    githubLink: "https://github.com/pritam-ago/filesystem"
+  },
+  {
+    title: "Mystery Store (E-Commerce)",
+    description: "A modern e-commerce platform with Firebase authentication, dynamic cart management, and responsive design. Features include user authentication, product filtering, and real-time cart updates.",
+    technologies: ["React.js", "Firebase", "Vercel"],
+    image: "/onlinestore.png",
+    liveLink: "https://mystery-store.vercel.app/",
+    githubLink: "https://github.com/pritam-ago/mystery-store"
+  },
+  {
+    title: "Media Converter API",
+    description: "Backend service for media file conversion with S3 integration and scalable API routes. Supports multiple file formats and includes progress tracking.",
+    technologies: ["Node.js", "Express.js", "MongoDB", "AWS S3"],
+    image: "/mediaconverter.png",
+    githubLink: "https://github.com/pritam-ago/media-converter"
+  },
+]
+
+// Skill categories
+const skillCategories = [
+  {
+    title: "Languages",
+    icon: <Code className="h-6 w-6 text-[#58a6ff]" />,
+    skills: ["JavaScript", "TypeScript", "Go lang"],
+  },
+  {
+    title: "Frontend",
+    icon: <Code className="h-6 w-6 text-[#58a6ff]" />,
+    skills: ["React.js", "Next.js", "Expo Native"],
+  },
+  {
+    title: "Backend",
+    icon: <Server className="h-6 w-6 text-[#58a6ff]" />,
+    skills: ["Node.js", "Express.js", "Mongoose"],
+  },
+  {
+    title: "Databases",
+    icon: <Database className="h-6 w-6 text-[#58a6ff]" />,
+    skills: ["MongoDB", "PostgreSQL", "NeonDB", "Prisma"],
+  },
+  {
+    title: "DevOps & Cloud",
+    icon: <Terminal className="h-6 w-6 text-[#58a6ff]" />,
+    skills: ["Docker", "AWS S3", "Railway", "Vercel"],
+  },
+  {
+    title: "Tools & CMS",
+    icon: <Server className="h-6 w-6 text-[#58a6ff]" />,
+    skills: ["Git", "Sanity", "Firebase"],
+  },
+]
 
 export default function Portfolio() {
   const [mounted, setMounted] = useState(false)
+  const [scrollProgress, setScrollProgress] = useState(0)
 
   // Refs for sections
   const aboutRef = useRef(null)
@@ -20,6 +206,30 @@ export default function Portfolio() {
 
   useEffect(() => {
     setMounted(true)
+
+    const handleScroll = () => {
+      const scrollTop = window.scrollY
+      const docHeight = document.documentElement.scrollHeight - window.innerHeight
+      const progress = docHeight > 0 ? (scrollTop / docHeight) * 100 : 0
+      setScrollProgress(progress)
+
+      // Handle scroll animations
+      const elements = document.querySelectorAll('.animate-on-scroll')
+      elements.forEach((element) => {
+        const elementTop = element.getBoundingClientRect().top
+        const elementBottom = element.getBoundingClientRect().bottom
+        const isVisible = elementTop < window.innerHeight && elementBottom > 0
+        if (isVisible) {
+          element.classList.add('visible')
+        }
+      })
+    }
+
+    window.addEventListener("scroll", handleScroll)
+    // Initial check for elements in view
+    handleScroll()
+    
+    return () => window.removeEventListener("scroll", handleScroll)
   }, [])
 
   if (!mounted) return null
@@ -27,7 +237,14 @@ export default function Portfolio() {
   return (
     <div className="min-h-screen bg-[#0d1117] text-[#e6edf3] font-mono relative">
       {/* Progress bar */}
-      <div className="fixed top-0 left-0 right-0 h-1 bg-[#58a6ff] z-50"></div>
+      <div
+        className="fixed top-0 left-1/2 h-1 bg-[#58a6ff] z-50 transition-all duration-200"
+        style={{ 
+          width: `${scrollProgress}%`, 
+          transform: `translateX(-50%) scaleX(${scrollProgress / 100})`,
+          transformOrigin: 'center'
+        }}
+      ></div>
 
       {/* Scanline effect */}
       <div className="scanlines pointer-events-none"></div>
@@ -37,8 +254,8 @@ export default function Portfolio() {
         <div className="container mx-auto px-4 py-4 flex justify-between items-center">
           <Link href="/" className="text-xl font-bold tracking-tight flex items-center">
             <Terminal className="mr-2 text-[#58a6ff]" />
-            <span className="text-[#58a6ff]">Dev</span>
-            <span className="text-[#7ee787]">@rtisan</span>
+            <span className="text-[#58a6ff]">Vikas</span>
+            <span className="ml-1 text-[#7ee787]">Pritam S</span>
           </Link>
           <nav className="hidden md:flex space-x-6 text-sm">
             <Link href="#about" className="hover:text-[#58a6ff] transition-colors relative group">
@@ -58,9 +275,11 @@ export default function Portfolio() {
               <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-[#58a6ff] transition-all group-hover:w-full"></span>
             </Link>
           </nav>
-          <Button variant="outline" className="border-[#58a6ff] text-[#58a6ff] hover:bg-[#1f2937] hover:text-[#7ee787]">
-            Resume
-          </Button>
+          <Link href="/resume/resume.pdf" target="_blank" rel="noopener noreferrer">
+            <Button variant="outline" className="border-[#58a6ff] text-[#58a6ff] hover:bg-[#1f2937] hover:text-[#7ee787]">
+              Resume
+            </Button>
+          </Link>
         </div>
       </header>
 
@@ -75,14 +294,12 @@ export default function Portfolio() {
               BACKEND DEVELOPER
             </div>
             <h1 className="text-4xl md:text-6xl font-bold mb-6 tracking-tight animate-fade-in-delay">
-              <span className="text-[#e6edf3]">Crafting </span>
-              <span className="text-[#7ee787]">Robust</span>
-              <span className="text-[#e6edf3]"> Backend </span>
-              <span className="text-[#58a6ff]">Solutions</span>
+              <span className="text-[#e6edf3]">Hi, I'm </span>
+              <span className="text-[#7ee787]">Vikas Pritam S</span>
             </h1>
-            <div className="text-lg md:text-xl mb-8 leading-relaxed text-[#8b949e] animate-fade-in-delay-2">
-              <span className="typing-text">
-                I build scalable, efficient, and maintainable backend systems that power modern applications.
+            <div className="w-full max-w-2xl mx-auto text-lg md:text-xl mb-8 leading-relaxed text-[#8b949e] animate-fade-in-delay-2 break-words whitespace-normal text-center">
+              <span className="typing-text block">
+                Aspiring backend developer passionate about scalable APIs, cloud systems, and modern backend tools.
               </span>
             </div>
             <div className="flex flex-col sm:flex-row gap-4 justify-center animate-fade-in-delay-3">
@@ -98,9 +315,9 @@ export default function Portfolio() {
       </section>
 
       {/* Terminal Section */}
-      <section className="py-10 border-b border-[#30363d] bg-[#161b22]">
+      <section className="py-16 border-b border-[#30363d] bg-[#161b22]">
         <div className="container mx-auto px-4">
-          <div className="max-w-3xl mx-auto">
+          <div className="max-w-4xl mx-auto">
             <TerminalComponent />
           </div>
         </div>
@@ -117,14 +334,10 @@ export default function Portfolio() {
               <div className="absolute top-0 right-0 w-20 h-20 border-t border-r border-[#58a6ff] -mt-1 -mr-1"></div>
               <div className="absolute bottom-0 left-0 w-20 h-20 border-b border-l border-[#58a6ff] -mb-1 -ml-1"></div>
               <p className="text-lg leading-relaxed mb-6 text-[#c9d1d9]">
-                I'm a passionate backend developer with a deep appreciation for well-architected systems. With a
-                background in computer science and years of experience building server-side applications, I focus on
-                creating efficient, scalable, and maintainable solutions.
+                Aspiring backend developer with a strong foundation in building scalable APIs and cloud-integrated systems using Node.js, Express.js, MongoDB, AWS S3, and Firebase. Passionate about system design, performance optimization, and learning modern backend tools.
               </p>
               <p className="text-lg leading-relaxed text-[#c9d1d9]">
-                My approach combines technical expertise with a problem-solving mindset. I believe in writing clean
-                code, implementing robust testing strategies, and designing systems that can evolve with changing
-                requirements.
+                Strong interest in backend engineering, scalable systems, and cloud infrastructure. Currently deepening expertise in Go and exploring concurrent programming models. Seeking internship opportunities in backend development, DevOps, or distributed systems.
               </p>
             </div>
           </div>
@@ -154,81 +367,12 @@ export default function Portfolio() {
             <span className="border-b-2 border-[#58a6ff] pb-1">Featured Projects</span>
           </h2>
 
-          <div className="animate-on-scroll">
-            <Tabs defaultValue="all" className="max-w-5xl mx-auto">
-              <TabsList className="grid w-full grid-cols-4 bg-[#0d1117] border border-[#30363d]">
-                <TabsTrigger
-                  value="all"
-                  className="data-[state=active]:bg-[#1f6feb] data-[state=active]:text-[#e6edf3]"
-                >
-                  All
-                </TabsTrigger>
-                <TabsTrigger
-                  value="api"
-                  className="data-[state=active]:bg-[#1f6feb] data-[state=active]:text-[#e6edf3]"
-                >
-                  APIs
-                </TabsTrigger>
-                <TabsTrigger
-                  value="database"
-                  className="data-[state=active]:bg-[#1f6feb] data-[state=active]:text-[#e6edf3]"
-                >
-                  Databases
-                </TabsTrigger>
-                <TabsTrigger
-                  value="architecture"
-                  className="data-[state=active]:bg-[#1f6feb] data-[state=active]:text-[#e6edf3]"
-                >
-                  Architecture
-                </TabsTrigger>
-              </TabsList>
-
-              <TabsContent value="all" className="mt-6">
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-                  {projects.map((project, index) => (
-                    <div key={index} className="animate-on-scroll" style={{ animationDelay: `${index * 100}ms` }}>
-                      <ProjectCard project={project} />
-                    </div>
-                  ))}
-                </div>
-              </TabsContent>
-
-              <TabsContent value="api" className="mt-6">
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-                  {projects
-                    .filter((p) => p.category === "api")
-                    .map((project, index) => (
-                      <div key={index} className="animate-on-scroll" style={{ animationDelay: `${index * 100}ms` }}>
-                        <ProjectCard project={project} />
-                      </div>
-                    ))}
-                </div>
-              </TabsContent>
-
-              <TabsContent value="database" className="mt-6">
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-                  {projects
-                    .filter((p) => p.category === "database")
-                    .map((project, index) => (
-                      <div key={index} className="animate-on-scroll" style={{ animationDelay: `${index * 100}ms` }}>
-                        <ProjectCard project={project} />
-                      </div>
-                    ))}
-                </div>
-              </TabsContent>
-
-              <TabsContent value="architecture" className="mt-6">
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-                  {projects
-                    .filter((p) => p.category === "architecture")
-                    .map((project, index) => (
-                      <div key={index} className="animate-on-scroll" style={{ animationDelay: `${index * 100}ms` }}>
-                        <ProjectCard project={project} />
-                      </div>
-                    ))}
-                </div>
-              </TabsContent>
-            </Tabs>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-5xl mx-auto">
+            {projects.map((project, index) => (
+              <div key={index} className="animate-on-scroll" style={{ animationDelay: `${index * 100}ms` }}>
+                <ProjectCard project={project} />
+              </div>
+            ))}
           </div>
         </div>
       </section>
@@ -246,28 +390,43 @@ export default function Portfolio() {
 
             <div className="flex justify-center space-x-6 mb-10 animate-on-scroll">
               <Link
-                href="https://github.com"
+                href="https://github.com/pritam-ago"
+                target="_blank"
+                rel="noopener noreferrer"
                 className="p-3 bg-[#0d1117] border border-[#30363d] rounded-full hover:bg-[#1f2937] hover:border-[#58a6ff] transition-all transform hover:scale-110"
               >
                 <Github className="h-6 w-6 text-[#58a6ff]" />
                 <span className="sr-only">GitHub</span>
               </Link>
               <Link
-                href="https://linkedin.com"
+                href="https://www.linkedin.com/in/vikas-pritam/"
+                target="_blank"
+                rel="noopener noreferrer"
                 className="p-3 bg-[#0d1117] border border-[#30363d] rounded-full hover:bg-[#1f2937] hover:border-[#58a6ff] transition-all transform hover:scale-110"
               >
                 <Linkedin className="h-6 w-6 text-[#58a6ff]" />
                 <span className="sr-only">LinkedIn</span>
               </Link>
               <Link
-                href="https://twitter.com"
+                href="https://x.com/MonsterTonGames"
+                target="_blank"
+                rel="noopener noreferrer"
                 className="p-3 bg-[#0d1117] border border-[#30363d] rounded-full hover:bg-[#1f2937] hover:border-[#58a6ff] transition-all transform hover:scale-110"
               >
                 <Twitter className="h-6 w-6 text-[#58a6ff]" />
                 <span className="sr-only">Twitter</span>
               </Link>
               <Link
-                href="mailto:email@example.com"
+                href="https://www.instagram.com/fruity_gumbo"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="p-3 bg-[#0d1117] border border-[#30363d] rounded-full hover:bg-[#1f2937] hover:border-[#58a6ff] transition-all transform hover:scale-110"
+              >
+                <Instagram className="h-6 w-6 text-[#58a6ff]" />
+                <span className="sr-only">Instagram</span>
+              </Link>
+              <Link
+                href="mailto:pritamsocrates@gmail.com"
                 className="p-3 bg-[#0d1117] border border-[#30363d] rounded-full hover:bg-[#1f2937] hover:border-[#58a6ff] transition-all transform hover:scale-110"
               >
                 <Mail className="h-6 w-6 text-[#58a6ff]" />
@@ -280,7 +439,7 @@ export default function Portfolio() {
                 <span className="text-[#58a6ff]">$</span> contact
                 <span className="blink">_</span>
               </p>
-              <p className="font-mono text-[#e6edf3] mt-2">email@example.com</p>
+              <p className="font-mono text-[#e6edf3] mt-2">pritamsocrates@gmail.com</p>
             </div>
           </div>
         </div>
@@ -290,168 +449,10 @@ export default function Portfolio() {
       <footer className="py-6 border-t border-[#30363d] bg-[#0d1117]">
         <div className="container mx-auto px-4 text-center">
           <p className="text-sm text-[#8b949e]">
-            © {new Date().getFullYear()} • Designed and built with <span className="text-[#ff7b72]">♥</span>
+            © {new Date().getFullYear()} • Vikas Pritam S
           </p>
         </div>
       </footer>
     </div>
-  )
-}
-
-// Project data
-const projects = [
-  {
-    title: "E-commerce Microservices",
-    description: "A scalable microservices architecture for an e-commerce platform handling 10k+ transactions daily.",
-    technologies: ["Node.js", "Express", "MongoDB", "RabbitMQ", "Docker"],
-    category: "architecture",
-    image: "/placeholder.svg?height=200&width=300",
-  },
-  {
-    title: "Financial Data API",
-    description: "RESTful API for financial data processing with robust security and rate limiting.",
-    technologies: ["Python", "FastAPI", "PostgreSQL", "Redis", "JWT"],
-    category: "api",
-    image: "/placeholder.svg?height=200&width=300",
-  },
-  {
-    title: "Real-time Analytics Engine",
-    description: "High-performance analytics system processing millions of events per minute.",
-    technologies: ["Go", "Kafka", "ClickHouse", "Elasticsearch", "Grafana"],
-    category: "database",
-    image: "/placeholder.svg?height=200&width=300",
-  },
-  {
-    title: "Content Management API",
-    description: "GraphQL API for a headless CMS with complex permission systems.",
-    technologies: ["TypeScript", "NestJS", "GraphQL", "PostgreSQL", "Redis"],
-    category: "api",
-    image: "/placeholder.svg?height=200&width=300",
-  },
-]
-
-// Skill categories
-const skillCategories = [
-  {
-    title: "Languages",
-    icon: <Code className="h-6 w-6 text-[#58a6ff]" />,
-    skills: ["JavaScript", "TypeScript", "Python", "Java", "Go", "SQL"],
-  },
-  {
-    title: "Frameworks",
-    icon: <Server className="h-6 w-6 text-[#58a6ff]" />,
-    skills: ["Node.js", "Express", "NestJS", "Django", "Spring Boot", "Flask"],
-  },
-  {
-    title: "Databases",
-    icon: <Database className="h-6 w-6 text-[#58a6ff]" />,
-    skills: ["PostgreSQL", "MongoDB", "MySQL", "Redis", "Elasticsearch"],
-  },
-  {
-    title: "DevOps",
-    icon: <Terminal className="h-6 w-6 text-[#58a6ff]" />,
-    skills: ["Docker", "Kubernetes", "AWS", "CI/CD", "Terraform"],
-  },
-  {
-    title: "API Design",
-    icon: <Code className="h-6 w-6 text-[#58a6ff]" />,
-    skills: ["REST", "GraphQL", "gRPC", "Swagger/OpenAPI"],
-  },
-  {
-    title: "Architecture",
-    icon: <Server className="h-6 w-6 text-[#58a6ff]" />,
-    skills: ["Microservices", "Event-Driven", "Serverless", "Domain-Driven Design"],
-  },
-]
-
-// Project Card Component
-function ProjectCard({ project }) {
-  const [isExpanded, setIsExpanded] = useState(false)
-
-  return (
-    <div className="transform transition-transform hover:-translate-y-1">
-      <Card className="overflow-hidden border-[#30363d] bg-[#0d1117] h-full">
-        <div className="aspect-video w-full overflow-hidden bg-[#161b22] relative group">
-          <img
-            src={project.image || "/placeholder.svg"}
-            alt={project.title}
-            className="h-full w-full object-cover transition-all group-hover:scale-105 opacity-80 group-hover:opacity-100"
-          />
-          <div className="absolute inset-0 bg-gradient-to-t from-[#0d1117] to-transparent opacity-70"></div>
-        </div>
-        <CardContent className="p-6 relative">
-          <h3 className="text-xl font-bold mb-2 text-[#58a6ff]">{project.title}</h3>
-          <p className="text-sm mb-4 text-[#8b949e]">{project.description}</p>
-          <div className="flex flex-wrap gap-2 mb-4">
-            {project.technologies.map((tech, index) => (
-              <Badge key={index} className="bg-[#1f2937] text-[#7ee787] hover:bg-[#2d3748]">
-                {tech}
-              </Badge>
-            ))}
-          </div>
-          <div className="flex justify-between">
-            <Button
-              variant="outline"
-              size="sm"
-              className="border-[#58a6ff] text-[#58a6ff] hover:bg-[#1f2937]"
-              onClick={() => setIsExpanded(!isExpanded)}
-            >
-              {isExpanded ? "Less Details" : "More Details"}
-            </Button>
-            <Button variant="outline" size="sm" className="border-[#238636] text-[#7ee787] hover:bg-[#1f2937]">
-              Live Demo
-            </Button>
-          </div>
-
-          {isExpanded && (
-            <div className="mt-4 pt-4 border-t border-[#30363d] animate-expand">
-              <h4 className="text-md font-bold mb-2 text-[#e6edf3]">Project Details</h4>
-              <p className="text-sm mb-3 text-[#8b949e]">
-                This project was built to solve complex {project.category} challenges. It features robust error
-                handling, comprehensive testing, and was designed with scalability in mind.
-              </p>
-              <h4 className="text-md font-bold mb-2 text-[#e6edf3]">Key Features</h4>
-              <ul className="list-disc pl-5 text-sm text-[#8b949e] mb-3">
-                <li>High-performance architecture</li>
-                <li>Comprehensive security measures</li>
-                <li>Extensive documentation</li>
-                <li>Scalable infrastructure</li>
-              </ul>
-              <div className="flex justify-end">
-                <Button size="sm" className="bg-[#238636] hover:bg-[#2ea043] text-[#e6edf3]">
-                  View Repository
-                </Button>
-              </div>
-            </div>
-          )}
-        </CardContent>
-      </Card>
-    </div>
-  )
-}
-
-// Skill Card Component
-function SkillCard({ category }) {
-  return (
-    <Card className="bg-[#0d1117] border-[#30363d] h-full overflow-hidden hover:border-[#58a6ff] transition-colors">
-      <CardContent className="p-6 relative">
-        <div className="flex items-center mb-4">
-          {category.icon}
-          <h3 className="text-xl font-bold ml-2 text-[#58a6ff] border-b border-[#30363d] pb-2 flex-grow">
-            {category.title}
-          </h3>
-        </div>
-        <div className="flex flex-wrap gap-2">
-          {category.skills.map((skill, index) => (
-            <Badge
-              key={index}
-              className="bg-[#1f2937] text-[#7ee787] hover:bg-[#2d3748] cursor-pointer transform transition-transform hover:scale-105"
-            >
-              {skill}
-            </Badge>
-          ))}
-        </div>
-      </CardContent>
-    </Card>
   )
 }
