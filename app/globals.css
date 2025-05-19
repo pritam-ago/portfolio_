@@ -13,7 +13,7 @@
     --popover: 0 0% 100%;
     --popover-foreground: 222.2 84% 4.9%;
 
-    --primary: 222.2 47.4% 11.2%;
+    --primary: 221.2 83.2% 53.3%;
     --primary-foreground: 210 40% 98%;
 
     --secondary: 210 40% 96.1%;
@@ -30,7 +30,7 @@
 
     --border: 214.3 31.8% 91.4%;
     --input: 214.3 31.8% 91.4%;
-    --ring: 222.2 84% 4.9%;
+    --ring: 221.2 83.2% 53.3%;
 
     --radius: 0.5rem;
   }
@@ -45,7 +45,7 @@
     --popover: 222.2 84% 4.9%;
     --popover-foreground: 210 40% 98%;
 
-    --primary: 210 40% 98%;
+    --primary: 217.2 91.2% 59.8%;
     --primary-foreground: 222.2 47.4% 11.2%;
 
     --secondary: 217.2 32.6% 17.5%;
@@ -62,7 +62,7 @@
 
     --border: 217.2 32.6% 17.5%;
     --input: 217.2 32.6% 17.5%;
-    --ring: 212.7 26.8% 83.9%;
+    --ring: 224.3 76.3% 48%;
   }
 }
 
@@ -75,11 +75,17 @@
   }
 }
 
+/* Favicon styling */
+link[rel="icon"] {
+  border-radius: 50%;
+  overflow: hidden;
+}
+
 /* Animation classes */
 @keyframes fadeIn {
   from {
     opacity: 0;
-    transform: translateY(20px);
+    transform: translateY(10px);
   }
   to {
     opacity: 1;
@@ -90,36 +96,37 @@
 @keyframes expand {
   from {
     opacity: 0;
-    max-height: 0;
+    transform: scale(0.95);
   }
   to {
     opacity: 1;
-    max-height: 1000px;
+    transform: scale(1);
   }
 }
 
 @keyframes blink {
-  0%, 100% { opacity: 1; }
-  50% { opacity: 0; }
+  from, to {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0;
+  }
 }
 
 .animate-fade-in {
-  animation: fadeIn 0.5s ease-out forwards;
+  animation: fadeIn 0.5s ease-in forwards;
 }
 
 .animate-fade-in-delay {
-  animation: fadeIn 0.5s ease-out 0.2s forwards;
-  opacity: 0;
+  animation: fadeIn 0.5s ease-in 0.2s forwards;
 }
 
 .animate-fade-in-delay-2 {
-  animation: fadeIn 0.5s ease-out 0.4s forwards;
-  opacity: 0;
+  animation: fadeIn 0.5s ease-in 0.4s forwards;
 }
 
 .animate-fade-in-delay-3 {
-  animation: fadeIn 0.5s ease-out 0.6s forwards;
-  opacity: 0;
+  animation: fadeIn 0.5s ease-in 0.6s forwards;
 }
 
 .animate-expand {
@@ -129,7 +136,7 @@
 .animate-on-scroll {
   opacity: 0;
   transform: translateY(20px);
-  transition: all 0.5s ease-out;
+  transition: opacity 0.6s ease-out, transform 0.6s ease-out;
 }
 
 .animate-on-scroll.visible {
@@ -143,10 +150,13 @@
 
 /* Matrix background effect */
 .matrix-bg {
-  background: linear-gradient(180deg, rgba(13, 17, 23, 0) 0%, rgba(13, 17, 23, 0.8) 100%);
-  position: absolute;
-  inset: 0;
-  z-index: 0;
+  background: linear-gradient(45deg, #0d1117 25%, transparent 25%),
+              linear-gradient(-45deg, #0d1117 25%, transparent 25%),
+              linear-gradient(45deg, transparent 75%, #0d1117 75%),
+              linear-gradient(-45deg, transparent 75%, #0d1117 75%);
+  background-size: 20px 20px;
+  background-position: 0 0, 0 10px, 10px -10px, -10px 0px;
+  opacity: 0.1;
 }
 
 /* Scanline effect */
@@ -163,8 +173,7 @@
   );
   background-size: 100% 4px;
   pointer-events: none;
-  z-index: 999;
-  opacity: 0.15;
+  z-index: 50;
 }
 
 /* Code block styling */
@@ -174,19 +183,15 @@
 }
 
 .code-block::before {
-  content: "";
+  content: '';
   position: absolute;
   top: 0;
   left: 0;
-  width: 100%;
-  height: 100%;
-  background: linear-gradient(
-    to bottom,
-    rgba(0, 0, 0, 0.1) 0%,
-    rgba(0, 0, 0, 0) 5%,
-    rgba(0, 0, 0, 0) 95%,
-    rgba(0, 0, 0, 0.1) 100%
-  );
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(45deg, transparent 48%, #58a6ff 49%, #58a6ff 51%, transparent 52%);
+  background-size: 20px 20px;
+  opacity: 0.1;
   pointer-events: none;
 }
 
@@ -226,20 +231,24 @@
 }
 
 .terminal-prompt::before {
-  content: "";
+  content: '';
   position: absolute;
   top: 0;
   left: 0;
-  width: 100%;
-  height: 100%;
-  background: linear-gradient(
-    to bottom,
-    rgba(0, 0, 0, 0.1) 0%,
-    rgba(0, 0, 0, 0) 5%,
-    rgba(0, 0, 0, 0) 95%,
-    rgba(0, 0, 0, 0.1) 100%
-  );
-  pointer-events: none;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(90deg, transparent 0%, #58a6ff 50%, transparent 100%);
+  opacity: 0.1;
+  animation: shimmer 2s infinite;
+}
+
+@keyframes shimmer {
+  0% {
+    transform: translateX(-100%);
+  }
+  100% {
+    transform: translateX(100%);
+  }
 }
 
 /* Typing animation */
